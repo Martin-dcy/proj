@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<script type="text/javascript">
+	function checklogin() {
+		var username = document.getElementById("username").value;
+		var password = document.getElementById("password").value;
+		var xmlhttp;
+		var xmlhttp1;
+		if(typeof(username) != "undefined" && typeof(password) != "undefined") {		
+			if (window.XMLHttpRequest) {
+			  	xmlhttp = new XMLHttpRequest();
+			  	xmlhttp1 = new XMLHttpRequest();
+			} else {
+			  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+			  	xmlhttp1 = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xmlhttp.onreadystatechange = function() {
+			    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			    	var responseText = xmlhttp.responseText;
+			    	if (responseText == 1) {
+			    		xmlhttp1.onreadystatechange = function() {
+				    		if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+				    			var mainHtml = xmlhttp1.responseText;
+				    			document.write(mainHtml);
+						    }
+			    		}
+			    		xmlhttp1.open("GET","./main",true)
+						xmlhttp1.send();
+			    	} else if (responseText == 0) {
+			    		document.getElementById("hint").innerHTML=xmlhttp.responseText;
+			    	}
+			    }
+			}
+			xmlhttp.open("POST","./login",true);
+			xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+			xmlhttp.send("username=" + username + "&password=" + password);
+		}
+	}
+</script>
+</head>  
+<body>  
+<h2>login</h2>
+Username:<input type="text" id="username"><br>
+Password:<input type="text" id="password"><br>
+<button onclick="checklogin()">登录</button>
+<h6><span id="hint"></span></h6>   
+</body>  
+</html> 
